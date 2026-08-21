@@ -100,14 +100,23 @@ function selectElement(element) {
 // MOUSE POSITION
 // ============================================================
 
+// ============================================================
+// MOUSE & TOUCH POSITION (PC AND MOBILE COMPATIBLE)
+// ============================================================
+
 function getMousePos(event) {
   const rect = canvas.getBoundingClientRect();
+  
+  // Checks if input is a touch event or standard mouse event
+  const clientX = event.touches && event.touches.length > 0 ? event.touches[0].clientX : event.clientX;
+  const clientY = event.touches && event.touches.length > 0 ? event.touches[0].clientY : event.clientY;
 
   return {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top
+    x: clientX - rect.left,
+    y: clientY - rect.top
   };
 }
+
 
 
 // ============================================================
@@ -1199,4 +1208,108 @@ function createBond(atom1, atom2) {
 // INITIAL DRAW
 // ============================================================
 
-redraw();
+function redraw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bonds.forEach(drawBond);
+  atoms.forEach(drawAtom);
+  updateInspector();
+}
+
+// ============================================================
+// NATIVE MOBILE TOUCH EVENT HANDLING
+// ============================================================
+
+canvas.addEventListener('touchstart', (event) => {
+  // Prevents mobile browser page from scrolling or zooming while drawing
+  event.preventDefault();
+  
+  const { x, y } = getMousePos(event);
+  const dotAtom = findDotAt(x, y);
+
+  if (dotAtom) {
+    bondingFromAtom = dotAtom;
+    isBonding = true;
+    return;
+  }
+
+  const atom = findAtomAt(x, y);
+  if (atom) {
+    selectedAtom = atom;
+    draggingAtom = atom;
+    dragOffsetX = atom.x - x;
+    dragOffsetY = atom.y - y;
+    isDragging = false;
+    redraw();
+    return;
+  }
+
+  const newAtom = {
+    id: nextId++,
+    x,
+    y,
+    element: selectedElement
+  };
+  atoms.push(newAtom);
+  selectedAtom = newAtom;
+  redraw();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', (event) => {
+  event.preventDefault();
+  const { x, y } = getMousePos(event);
+
+  if (draggingAtom) {
+    const dx = Math.abs(x - (draggingAtom.x - dragOffsetX));
+    const dy = Math.abs(y - (draggingAtom.y - dragOffsetY));
+
+    if (dx > 3 || dy > 3) {
+      isDragging = true;
+    }
+
+    if (isDragging) {
+      draggingAtom.x = x + dragOffsetX;
+      draggingAtom.y = y + dragOffsetY;
+      redraw();
+    }
+    return;
+  }
+
+  if (bondingFromAtom) {
+    bondPreviewPos = { x, y };
+    redraw();
+
+    ctx.beginPath();
+    ctx.moveTo(bondingFromAtom.x, bondingFromAtom.y);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = '#3399ff';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'black';
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', (event) => {
+  if (bondingFromAtom) {
+    // If finger was lifted, find position from the changed touch tracker
+    const rect = canvas.getBoundingClientRect();
+    const clientX = event.changedTouches && event.changedTouches.length > 0 ? event.changedTouches[0].clientX : event.clientX;
+    const clientY = event.changedTouches && event.changedTouches.length > 0 ? event.changedTouches[0].clientY : event.clientY;
+    
+    const endX = clientX - rect.left;
+    const endY = clientY - rect.top;
+    const targetAtom = findAtomAt(endX, endY);
+
+    if (targetAtom && targetAtom.id !== bondingFromAtom.id) {
+      createBond(bondingFromAtom, targetAtom);
+    }
+  }
+
+  draggingAtom = null;
+  bondingFromAtom = null;
+  bondPreviewPos = null;
+  isDragging = false;
+  isBonding = false;
+  redraw();
+});
