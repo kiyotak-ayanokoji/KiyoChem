@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    background: #aaecf5;
+
+    text-align: center;
+}
+
+header {
+    padding: 20px 0 10px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+header p {
+    margin-top: 5px;
+    color: #333;
+}
+
+#toolbar {
+    margin: 10px 0 20px;
+}
+
+#toolbar button {
+    width: 45px;
+    height: 35px;
+
+    margin: 3px;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: 20px;
+
+    padding: 0 20px;
+}
+
+.builder {
+    background: white;
+
+    border: 2px solid #333;
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+
+    background: white;
+
+    cursor: crosshair;
+}
+
+#analysis {
+    width: 280px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    border: 2px solid #333;
+    border-radius: 10px;
+
+    padding: 18px;
+
+    text-align: left;
+
+    box-sizing: border-box;
+}
+
+#analysis h2 {
+    margin-top: 0;
+}
+
+.infoBox {
+    background: #eefcff;
+
+    border: 1px solid #aaa;
+
+    border-radius: 7px;
+
+    padding: 10px;
+
+    margin: 10px 0;
+}
+
+.infoBox strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#formula {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#mass {
+    font-size: 18px;
+}
+
+#atomInfo {
+    line-height: 1.7;
+}
+
+.good {
+    color: green;
+    font-weight: bold;
+}
+
+.warning {
+    color: #c77700;
+    font-weight: bold;
+}
+
+.bad {
+    color: red;
+    font-weight: bold;
+}
+
+.lonePair {
+    color: #7b2cff;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+
+    margin: 18px 0;
+}
