@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kiyotaka Labs — Molecule Builder</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Kiyotaka Labs</h1>
+        <p>Molecular Builder</p>
+    </header>
+
+    <div id="toolbar">
+        <button onclick="selectElement('C')">C</button>
+        <button onclick="selectElement('H')">H</button>
+        <button onclick="selectElement('O')">O</button>
+        <button onclick="selectElement('N')">N</button>
+        <button onclick="selectElement('F')">F</button>
+    </div>
+
+    <main>
+
+        <section class="builder">
+            <canvas id="canvas" width="800" height="600"></canvas>
+        </section>
+
+        <aside id="analysis">
+
+            <h2>🔬 Molecule Analysis</h2>
+
+            <div class="infoBox">
+                <strong>Formula</strong>
+                <div id="formula">—</div>
+            </div>
+
+            <div class="infoBox">
+                <strong>Molecular Mass</strong>
+                <div id="mass">—</div>
+            </div>
+
+            <hr>
+
+            <h3>Selected Atom</h3>
+
+            <div id="atomInfo">
+                Click an atom to inspect it.
+            </div>
+
+            <hr>
+
+            <div id="warnings"></div>
+
+        </aside>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+ 
