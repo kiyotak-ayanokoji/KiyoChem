@@ -1,67 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kiyotaka Labs — Molecule Builder</title>
+    <title>Kiyotaka Labs — Chemistry</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
 </head>
 
 <body>
 
-    <header>
-        <h1>Kiyotaka Labs</h1>
-        <p>Molecular Builder</p>
+    <!-- NAVIGATION -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            KIYOTAKA<span>LABS</span>
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="whiteboard.html">Whiteboard</a>
+            <a href="#tools">Tools</a>
+            <a href="#about">About</a>
+        </nav>
+
     </header>
 
-    <div id="toolbar">
-        <button onclick="selectElement('C')">C</button>
-        <button onclick="selectElement('H')">H</button>
-        <button onclick="selectElement('O')">O</button>
-        <button onclick="selectElement('N')">N</button>
-        <button onclick="selectElement('F')">F</button>
-    </div>
+
+    <!-- HERO -->
 
     <main>
 
-        <section class="builder">
-            <canvas id="canvas" width="800" height="600"></canvas>
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="eyebrow">
+                    CHEMISTRY • VISUALIZATION • ANALYSIS
+                </p>
+
+                <h1>
+                    Explore<br>
+                    <span>Chemistry.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Build molecules, visualize molecular structures,
+                    analyze bonding and explore the chemistry behind them.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="whiteboard.html" class="primary-button">
+                        Open Whiteboard →
+                    </a>
+
+                    <a href="#tools" class="secondary-button">
+                        Explore Tools
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- MOLECULE VISUAL -->
+
+            <div class="molecule">
+
+                <div class="atom atom-c">C</div>
+
+                <div class="atom atom-o">O</div>
+
+                <div class="atom atom-n">N</div>
+
+                <div class="atom atom-h1">H</div>
+
+                <div class="atom atom-h2">H</div>
+
+                <div class="bond bond-1"></div>
+                <div class="bond bond-2"></div>
+                <div class="bond bond-3"></div>
+                <div class="bond bond-4"></div>
+
+            </div>
+
         </section>
 
-        <aside id="analysis">
 
-            <h2>🔬 Molecule Analysis</h2>
+        <!-- FEATURES -->
 
-            <div class="infoBox">
-                <strong>Formula</strong>
-                <div id="formula">—</div>
+        <section class="tools" id="tools">
+
+            <div class="section-heading">
+
+                <p>KIYOTAKA LABS</p>
+
+                <h2>Built for chemistry.</h2>
+
             </div>
 
-            <div class="infoBox">
-                <strong>Molecular Mass</strong>
-                <div id="mass">—</div>
+
+            <div class="tool-grid">
+
+                <div class="tool-card">
+
+                    <div class="tool-number">01</div>
+
+                    <h3>2D Molecular Builder</h3>
+
+                    <p>
+                        Construct molecular structures interactively
+                        using atoms, bonds and lone pairs.
+                    </p>
+
+                    <span>Available now →</span>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <div class="tool-number">02</div>
+
+                    <h3>Bond Analysis</h3>
+
+                    <p>
+                        Analyze bond order, sigma bonds, lone pairs
+                        and electron domains.
+                    </p>
+
+                    <span>In development →</span>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <div class="tool-number">03</div>
+
+                    <h3>Molecular Geometry</h3>
+
+                    <p>
+                        Explore VSEPR-based electron and molecular
+                        geometries and bond angles.
+                    </p>
+
+                    <span>In development →</span>
+
+                </div>
+
+
+                <div class="tool-card">
+
+                    <div class="tool-number">04</div>
+
+                    <h3>IUPAC Nomenclature</h3>
+
+                    <p>
+                        Generate systematic names from molecular
+                        structures.
+                    </p>
+
+                    <span>Coming soon →</span>
+
+                </div>
+
             </div>
 
-            <hr>
+        </section>
 
-            <h3>Selected Atom</h3>
 
-            <div id="atomInfo">
-                Click an atom to inspect it.
-            </div>
+        <!-- ABOUT -->
 
-            <hr>
+        <section class="about" id="about">
 
-            <div id="warnings"></div>
+            <p class="eyebrow">ABOUT</p>
 
-        </aside>
+            <h2>
+                Chemistry,<br>
+                made visual.
+            </h2>
+
+            <p>
+                Kiyotaka Labs is an experimental chemistry platform
+                focused on molecular visualization, analysis and
+                interactive learning.
+            </p>
+
+        </section>
 
     </main>
 
-    <script src="script.js"></script>
+
+    <footer>
+
+        <div>
+            KIYOTAKA LABS
+        </div>
+
+        <p>
+            Chemistry • Visualization • Experimentation
+        </p>
+
+    </footer>
+
+
+    <script src="home.js"></script>
 
 </body>
+
 </html>
- 
