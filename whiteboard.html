@@ -1,67 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Kiyotaka Labs — Molecule Builder</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KiyoChem — Molecular Builder</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-    <header>
-        <h1>Kiyotaka Labs</h1>
-        <p>Molecular Builder</p>
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <a href="index.html">
+                Kiyo<span>Chem</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <span class="page-title">
+                Molecular Builder
+            </span>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                id="undoBtn"
+                title="Undo (Ctrl+Z)"
+                type="button"
+            >
+                ↶
+            </button>
+
+
+            <button
+                id="redoBtn"
+                title="Redo (Ctrl+Y)"
+                type="button"
+            >
+                ↷
+            </button>
+
+
+            <div class="divider"></div>
+
+
+            <button
+                id="clearBtn"
+                type="button"
+            >
+                Clear
+            </button>
+
+
+            <a
+                href="index.html"
+                class="home-btn"
+            >
+                ← Home
+            </a>
+
+        </div>
+
     </header>
 
-    <div id="toolbar">
-        <button onclick="selectElement('C')">C</button>
-        <button onclick="selectElement('H')">H</button>
-        <button onclick="selectElement('O')">O</button>
-        <button onclick="selectElement('N')">N</button>
-        <button onclick="selectElement('F')">F</button>
-    </div>
 
-    <main>
 
-        <section class="builder">
-            <canvas id="canvas" width="800" height="600"></canvas>
-        </section>
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
 
-        <aside id="analysis">
+    <main class="workspace">
 
-            <h2>🔬 Molecule Analysis</h2>
 
-            <div class="infoBox">
-                <strong>Formula</strong>
-                <div id="formula">—</div>
+        <!-- =================================================
+             ELEMENT TOOLBAR
+        ================================================== -->
+
+        <aside class="element-toolbar">
+
+
+            <div class="toolbar-title">
+                ELEMENTS
             </div>
 
-            <div class="infoBox">
-                <strong>Molecular Mass</strong>
-                <div id="mass">—</div>
+
+            <!-- CARBON -->
+
+            <button
+                class="element-btn active"
+                data-element="C"
+                type="button"
+            >
+
+                <strong>C</strong>
+
+                <span>
+                    Carbon
+                </span>
+
+            </button>
+
+
+            <!-- HYDROGEN -->
+
+            <button
+                class="element-btn"
+                data-element="H"
+                type="button"
+            >
+
+                <strong>H</strong>
+
+                <span>
+                    Hydrogen
+                </span>
+
+            </button>
+
+
+            <!-- OXYGEN -->
+
+            <button
+                class="element-btn"
+                data-element="O"
+                type="button"
+            >
+
+                <strong>O</strong>
+
+                <span>
+                    Oxygen
+                </span>
+
+            </button>
+
+
+            <!-- NITROGEN -->
+
+            <button
+                class="element-btn"
+                data-element="N"
+                type="button"
+            >
+
+                <strong>N</strong>
+
+                <span>
+                    Nitrogen
+                </span>
+
+            </button>
+
+
+            <!-- FLUORINE -->
+
+            <button
+                class="element-btn"
+                data-element="F"
+                type="button"
+            >
+
+                <strong>F</strong>
+
+                <span>
+                    Fluorine
+                </span>
+
+            </button>
+
+
+
+            <!-- =================================================
+                 HELP
+            ================================================== -->
+
+            <div class="toolbar-help">
+
+
+                <div>
+
+                    <b>
+                        Click
+                    </b>
+
+                    <span>
+                        Place atom
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Drag atom
+                    </b>
+
+                    <span>
+                        Move atom
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Drag dot
+                    </b>
+
+                    <span>
+                        Create bond
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Middle mouse
+                    </b>
+
+                    <span>
+                        Pan workspace
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Wheel
+                    </b>
+
+                    <span>
+                        Zoom
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Ctrl + Z
+                    </b>
+
+                    <span>
+                        Undo
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <b>
+                        Ctrl + Y
+                    </b>
+
+                    <span>
+                        Redo
+                    </span>
+
+                </div>
+
             </div>
-
-            <hr>
-
-            <h3>Selected Atom</h3>
-
-            <div id="atomInfo">
-                Click an atom to inspect it.
-            </div>
-
-            <hr>
-
-            <div id="warnings"></div>
 
         </aside>
 
+
+
+        <!-- =================================================
+             INFINITE CANVAS
+        ================================================== -->
+
+        <section
+            class="canvas-area"
+            id="canvasArea"
+        >
+
+
+            <!-- ZOOM INDICATOR -->
+
+            <div id="zoomDisplay">
+                100%
+            </div>
+
+
+            <!-- MAIN CANVAS -->
+
+            <canvas
+                id="canvas"
+            ></canvas>
+
+
+            <!-- WORKSPACE HINT -->
+
+            <div class="canvas-hint">
+
+                Drag the blue connection dots
+                between atoms to create bonds
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             ANALYSIS PANEL
+        ================================================== -->
+
+        <aside id="analysis">
+
+
+            <!-- HEADER -->
+
+            <div class="analysis-header">
+
+                <span>
+                    MOLECULE ANALYSIS
+                </span>
+
+                <span
+                    class="status-dot"
+                    aria-label="Workspace ready"
+                ></span>
+
+            </div>
+
+
+
+            <!-- FORMULA -->
+
+            <div class="infoBox">
+
+                <label>
+                    FORMULA
+                </label>
+
+                <div id="formula">
+                    —
+                </div>
+
+            </div>
+
+
+
+            <!-- MOLECULAR MASS -->
+
+            <div class="infoBox">
+
+                <label>
+                    MOLECULAR MASS
+                </label>
+
+                <div id="mass">
+                    —
+                </div>
+
+            </div>
+
+
+
+            <!-- SELECTED ATOM -->
+
+            <div class="panel-section">
+
+                <h3>
+                    Selected Atom
+                </h3>
+
+                <div id="atomInfo">
+                    Click an atom to inspect it.
+                </div>
+
+            </div>
+
+
+
+            <!-- BOND / VSEPR ANALYSIS -->
+
+            <div class="panel-section">
+
+                <h3>
+                    Bond Analysis
+                </h3>
+
+                <div id="bondInfo">
+                    No atom selected.
+                </div>
+
+            </div>
+
+
+
+            <!-- WARNINGS -->
+
+            <div id="warnings"></div>
+
+
+        </aside>
+
+
     </main>
+
+
+
+    <!-- =====================================================
+         BUILDER JAVASCRIPT
+    ====================================================== -->
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
- 
