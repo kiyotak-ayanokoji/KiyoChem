@@ -78,6 +78,9 @@ let bondingFromAtom = null;
 
 let bondPreviewPos = null;
 
+let draggingBond = null;
+let bondDragStart = null;
+
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
@@ -125,7 +128,103 @@ function findAtomAt(x, y) {
   });
 }
 
+function getBondEndpoint(atom, otherAtom) {
 
+  const dx = otherAtom.x - atom.x;
+  const dy = otherAtom.y - atom.y;
+
+  const angle = Math.atan2(dy, dx);
+
+  const directions = [
+    {
+      dx: 0,
+      dy: -28,
+      angle: -Math.PI / 2
+    },
+    {
+      dx: 28,
+      dy: 0,
+      angle: 0
+    },
+    {
+      dx: 0,
+      dy: 28,
+      angle: Math.PI / 2
+    },
+    {
+      dx: -28,
+      dy: 0,
+      angle: Math.PI
+    }
+  ];
+
+  let best = directions[0];
+  let smallestDifference = Infinity;
+
+  for (const direction of directions) {
+
+    let difference =
+      Math.abs(angle - direction.angle);
+
+    if (difference > Math.PI) {
+      difference =
+        2 * Math.PI - difference;
+    }
+
+    if (difference < smallestDifference) {
+      smallestDifference = difference;
+      best = direction;
+    }
+  }
+
+  return {
+    x: atom.x + best.dx,
+    y: atom.y + best.dy
+  };
+}
+
+function findBondAt(x, y) {
+
+  const tolerance = 8;
+
+  for (const bond of bonds) {
+
+    const a1 = atoms.find(a => a.id === bond.atom1Id);
+    const a2 = atoms.find(a => a.id === bond.atom2Id);
+
+    if (!a1 || !a2) continue;
+
+    const p1 = getBondEndpoint(a1, a2);
+    const p2 = getBondEndpoint(a2, a1);
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+
+    const lengthSq = dx * dx + dy * dy;
+
+    if (lengthSq === 0) continue;
+
+    let t =
+      ((x - p1.x) * dx +
+       (y - p1.y) * dy) / lengthSq;
+
+    t = Math.max(0, Math.min(1, t));
+
+    const closestX = p1.x + t * dx;
+    const closestY = p1.y + t * dy;
+
+    const distance = Math.hypot(
+      x - closestX,
+      y - closestY
+    );
+
+    if (distance <= tolerance) {
+      return bond;
+    }
+  }
+
+  return null;
+}
 // ============================================================
 // BOND ORDER SUM
 // ============================================================
@@ -163,30 +262,74 @@ function sigmaBondCount(atomId) {
 
 function calculateLonePairs(atom) {
 
-  const data = elementData[atom.element];
-
-  if (!data) {
-    return 0;
-  }
-
   const bondOrder = bondOrderSum(atom.id);
 
-  const nonBondingElectrons =
-    data.valenceElectrons - bondOrder;
+  // ==========================================
+  // ISOLATED NEUTRAL ATOM
+  // ==========================================
 
-  if (nonBondingElectrons < 0) {
-    return 0;
+  if (bondOrder === 0) {
+
+    const isolatedLonePairs = {
+      H: 0,
+      C: 1,
+      N: 1,
+      O: 2,
+      F: 3
+    };
+
+    return isolatedLonePairs[atom.element] ?? 0;
   }
 
-  return Math.floor(nonBondingElectrons / 2);
-}
 
+  // ==========================================
+  // BONDED NEUTRAL ATOMS
+  // ==========================================
+
+  switch (atom.element) {
+
+    case 'H':
+      return 0;
+
+    case 'C':
+      return Math.max(0, 4 - bondOrder);
+
+    case 'N':
+      return Math.max(
+        0,
+        Math.floor((8 - bondOrder * 2) / 2)
+      );
+
+    case 'O':
+      return Math.max(
+        0,
+        Math.floor((8 - bondOrder * 2) / 2)
+      );
+
+    case 'F':
+      return Math.max(
+        0,
+        Math.floor((8 - bondOrder * 2) / 2)
+      );
+
+    default:
+      return 0;
+  }
+}
 
 // ============================================================
 // ELECTRON DOMAIN COUNT
 // ============================================================
 
 function calculateElectronDomains(atom) {
+
+  const bondOrder =
+    bondOrderSum(atom.id);
+
+  // Isolated atom → VSEPR does not apply
+  if (bondOrder === 0) {
+    return 0;
+  }
 
   const sigmaBonds =
     sigmaBondCount(atom.id);
@@ -204,11 +347,30 @@ function calculateElectronDomains(atom) {
 
 function calculateGeometry(atom) {
 
+  const bondOrder =
+    bondOrderSum(atom.id);
+
+  // Isolated atom → VSEPR does not apply
+  if (bondOrder === 0) {
+    return {
+      domains: 0,
+      lonePairs: calculateLonePairs(atom),
+      electronGeometry: "N/A",
+      molecularGeometry: "N/A",
+      bondAngle: "N/A"
+    };
+  }
+
   const domains =
     calculateElectronDomains(atom);
 
   const lonePairs =
     calculateLonePairs(atom);
+
+  // ↓↓↓ KEEP YOUR EXISTING CODE HERE ↓↓↓
+  
+
+
 
   let electronGeometry = "Unknown";
   let molecularGeometry = "Unknown";
@@ -380,11 +542,12 @@ function calculateGeometry(atom) {
 // DRAW ATOM
 // ============================================================
 
+
+
 function drawAtom(atom) {
 
   const x = atom.x;
   const y = atom.y;
-
 
   // Atom circle
   ctx.beginPath();
@@ -398,11 +561,9 @@ function drawAtom(atom) {
   );
 
   ctx.fillStyle = '#ddd';
-
   ctx.fill();
 
   ctx.strokeStyle = '#222';
-
   ctx.stroke();
 
 
@@ -448,16 +609,44 @@ function drawAtom(atom) {
   );
 
 
-  // Connection dots
-  const dotPositions = [
-    { dx: 0, dy: -20 },
-    { dx: 20, dy: 0 },
-    { dx: 0, dy: 20 },
-    { dx: -20, dy: 0 }
+  // ==========================================================
+  // AVAILABLE BONDING POSITIONS
+  // ==========================================================
+
+  const maxBonds =
+    elementData[atom.element]?.commonBondOrder ?? 0;
+
+  const usedBonds =
+    bondOrderSum(atom.id);
+
+  const availableBonds =
+    Math.max(0, maxBonds - usedBonds);
+
+
+  // Positions around the atom
+  const allPositions = [
+
+    { dx: 0, dy: -28 },
+
+    { dx: 28, dy: 0 },
+
+    { dx: 0, dy: 28 },
+
+    { dx: -28, dy: 0 }
+
   ];
 
 
-  dotPositions.forEach(pos => {
+  // Only draw as many connectors as are actually available
+  for (
+    let i = 0;
+    i < availableBonds;
+    i++
+  ) {
+
+    const pos =
+      allPositions[i];
+
 
     ctx.beginPath();
 
@@ -472,12 +661,13 @@ function drawAtom(atom) {
     ctx.fillStyle = '#3399ff';
 
     ctx.fill();
-  });
+  }
 
 
-  // Draw lone pairs
+  // Lone pairs
   drawLonePairs(atom);
 }
+
 
 
 // ============================================================
@@ -648,7 +838,64 @@ function redraw() {
 
 
   // Bonds first
-  bonds.forEach(drawBond);
+ bonds.forEach(bond => {
+
+  const a1 = atoms.find(
+    a => a.id === bond.atom1Id
+  );
+
+  const a2 = atoms.find(
+    a => a.id === bond.atom2Id
+  );
+
+  if (!a1 || !a2) return;
+
+  const p1 = getBondEndpoint(a1, a2);
+  const p2 = getBondEndpoint(a2, a1);
+
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+
+  const length = Math.hypot(dx, dy);
+
+  if (length === 0) return;
+
+  const perpX = -dy / length;
+  const perpY = dx / length;
+
+  const offsetGap = 5;
+
+  const offsets =
+    bond.order === 1
+      ? [0]
+      : bond.order === 2
+        ? [-offsetGap, offsetGap]
+        : [
+            -offsetGap * 1.5,
+            0,
+            offsetGap * 1.5
+          ];
+
+  offsets.forEach(offset => {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      p1.x + perpX * offset,
+      p1.y + perpY * offset
+    );
+
+    ctx.lineTo(
+      p2.x + perpX * offset,
+      p2.y + perpY * offset
+    );
+
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+  });
+});
 
 
   // Atoms second
@@ -658,7 +905,18 @@ function redraw() {
   updateInspector();
 }
 
+function maxBondsFor(element) {
 
+  const values = {
+    H: 1,
+    C: 4,
+    N: 3,
+    O: 2,
+    F: 1
+  };
+
+  return values[element] ?? 0;
+}
 // ============================================================
 // FIND DOT
 // ============================================================
@@ -667,37 +925,44 @@ function findDotAt(x, y) {
 
   for (const atom of atoms) {
 
+    const maxBonds =
+      elementData[atom.element]?.commonBondOrder ?? maxBondsFor(atom.element);
+
+    const usedBonds =
+      bondOrderSum(atom.id);
+
+    const availableBonds =
+      Math.max(0, maxBonds - usedBonds);
+
     const dotPositions = [
-      { dx: 0, dy: -20 },
-      { dx: 20, dy: 0 },
-      { dx: 0, dy: 20 },
-      { dx: -20, dy: 0 }
+      { dx: 0, dy: -28 },
+      { dx: 28, dy: 0 },
+      { dx: 0, dy: 28 },
+      { dx: -28, dy: 0 }
     ];
 
+    for (let i = 0; i < availableBonds; i++) {
 
-    for (const pos of dotPositions) {
+      const pos = dotPositions[i];
 
-      const dotX =
-        atom.x + pos.dx;
+      const dotX = atom.x + pos.dx;
+      const dotY = atom.y + pos.dy;
 
-      const dotY =
-        atom.y + pos.dy;
+      const dist = Math.hypot(
+        dotX - x,
+        dotY - y
+      );
 
-
-      const distance =
-        Math.sqrt(
-          (dotX - x) ** 2 +
-          (dotY - y) ** 2
-        );
-
-
-      if (distance < 8) {
-
-        return atom;
+      if (dist < 9) {
+        return {
+          atom: atom,
+          x: dotX,
+          y: dotY,
+          index: i
+        };
       }
     }
   }
-
 
   return null;
 }
@@ -882,48 +1147,74 @@ canvas.addEventListener('mousedown', (event) => {
 
   const { x, y } = getMousePos(event);
 
-  const dotAtom = findDotAt(x, y);
+  // ==========================================
+  // 1. CLICK ON BOND → PREPARE TO BREAK IT
+  // ==========================================
 
-  // Start bonding
-  if (dotAtom) {
+  const bond = findBondAt(x, y);
 
-    bondingFromAtom = dotAtom;
-    isBonding = true;
+  if (bond) {
+
+    draggingBond = bond;
+
+    bondDragStart = {
+      x,
+      y
+    };
 
     return;
   }
 
+
+  // ==========================================
+  // 2. CLICK ON CONNECTOR DOT → START BOND
+  // ==========================================
+
+  const dot = findDotAt(x, y);
+
+  if (dot) {
+
+    bondingFromAtom = dot.atom;
+
+    bondPreviewPos = {
+      x: dot.x,
+      y: dot.y
+    };
+
+    return;
+  }
+
+
+  // ==========================================
+  // 3. CLICK ON ATOM → DRAG ATOM
+  // ==========================================
 
   const atom = findAtomAt(x, y);
 
   if (atom) {
 
-    selectedAtom = atom;
-
     draggingAtom = atom;
 
-    dragOffsetX = atom.x - x;
-    dragOffsetY = atom.y - y;
+    dragOffsetX =
+      atom.x - x;
 
-    isDragging = false;
-
-    redraw();
+    dragOffsetY =
+      atom.y - y;
 
     return;
   }
 
 
-  // Empty canvas → create atom
-  const newAtom = {
+  // ==========================================
+  // 4. EMPTY SPACE → CREATE ATOM
+  // ==========================================
+
+  atoms.push({
     id: nextId++,
     x,
     y,
     element: selectedElement
-  };
-
-  atoms.push(newAtom);
-
-  selectedAtom = newAtom;
+  });
 
   redraw();
 });
@@ -938,46 +1229,27 @@ canvas.addEventListener('mousemove', (event) => {
   const { x, y } = getMousePos(event);
 
 
-  // -------------------------
+  // ==========================================
   // DRAGGING ATOM
-  // -------------------------
+  // ==========================================
 
   if (draggingAtom) {
 
-    const dx =
-      Math.abs(
-        x - (draggingAtom.x - dragOffsetX)
-      );
+    draggingAtom.x =
+      x + dragOffsetX;
 
-    const dy =
-      Math.abs(
-        y - (draggingAtom.y - dragOffsetY)
-      );
+    draggingAtom.y =
+      y + dragOffsetY;
 
-
-    if (dx > 3 || dy > 3) {
-      isDragging = true;
-    }
-
-
-    if (isDragging) {
-
-      draggingAtom.x =
-        x + dragOffsetX;
-
-      draggingAtom.y =
-        y + dragOffsetY;
-
-      redraw();
-    }
+    redraw();
 
     return;
   }
 
 
-  // -------------------------
-  // BOND PREVIEW
-  // -------------------------
+  // ==========================================
+  // DRAWING NEW BOND
+  // ==========================================
 
   if (bondingFromAtom) {
 
@@ -988,12 +1260,17 @@ canvas.addEventListener('mousemove', (event) => {
 
     redraw();
 
+    const start = getPreviewBondStart(
+      bondingFromAtom,
+      x,
+      y
+    );
 
     ctx.beginPath();
 
     ctx.moveTo(
-      bondingFromAtom.x,
-      bondingFromAtom.y
+      start.x,
+      start.y
     );
 
     ctx.lineTo(
@@ -1001,22 +1278,82 @@ canvas.addEventListener('mousemove', (event) => {
       y
     );
 
-
     ctx.strokeStyle =
       '#3399ff';
 
     ctx.lineWidth = 2;
 
-    ctx.setLineDash([6, 6]);
-
     ctx.stroke();
 
-    ctx.setLineDash([]);
+    return;
+  }
 
-    ctx.strokeStyle = 'black';
+
+  // ==========================================
+  // DRAGGING EXISTING BOND
+  // ==========================================
+
+  if (draggingBond) {
+
+    redraw();
+
+    const a1 = atoms.find(
+      a => a.id === draggingBond.atom1Id
+    );
+
+    const a2 = atoms.find(
+      a => a.id === draggingBond.atom2Id
+    );
+
+    if (!a1 || !a2) return;
+
+    const start =
+      getBondEndpoint(a1, a2);
+
+    const dx =
+      a2.x - a1.x;
+
+    const dy =
+      a2.y - a1.y;
+
+    const length =
+      Math.hypot(dx, dy);
+
+    if (length === 0) return;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      start.x,
+      start.y
+    );
+
+    ctx.lineTo(
+      x,
+      y
+    );
+
+    ctx.strokeStyle =
+      '#ff4444';
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
   }
 });
 
+function getPreviewBondStart(atom, x, y) {
+
+  const fakeTarget = {
+    x: x,
+    y: y
+  };
+
+  return getBondEndpoint(
+    atom,
+    fakeTarget
+  );
+}
 
 // ============================================================
 // MOUSE UP
@@ -1024,48 +1361,128 @@ canvas.addEventListener('mousemove', (event) => {
 
 canvas.addEventListener('mouseup', (event) => {
 
-  // -------------------------
-  // FINISH BOND
-  // -------------------------
+  const { x, y } = getMousePos(event);
 
-  if (bondingFromAtom) {
 
-    const { x, y } =
-      getMousePos(event);
+  // ==========================================
+  // BREAK EXISTING BOND
+  // ==========================================
+
+  if (draggingBond) {
 
     const targetAtom =
       findAtomAt(x, y);
 
+    // If released on empty space,
+    // break the bond.
+    if (!targetAtom) {
+
+      const index =
+        bonds.indexOf(draggingBond);
+
+      if (index !== -1) {
+        bonds.splice(index, 1);
+      }
+    }
+
+    // If released on an atom,
+    // leave the bond intact for now.
+    draggingBond = null;
+    bondDragStart = null;
+
+    redraw();
+
+    return;
+  }
+
+
+  // ==========================================
+  // CREATE NEW BOND
+  // ==========================================
+
+  if (bondingFromAtom) {
+
+    const targetAtom =
+      findAtomAt(x, y);
 
     if (
       targetAtom &&
-      targetAtom.id !==
-      bondingFromAtom.id
+      targetAtom.id !== bondingFromAtom.id
     ) {
 
-      createBond(
-        bondingFromAtom,
-        targetAtom
-      );
+      const atom1 =
+        bondingFromAtom;
+
+      const atom2 =
+        targetAtom;
+
+      const atom1Full =
+        bondCount(atom1.id) >=
+        maxBondsFor(atom1.element);
+
+      const atom2Full =
+        bondCount(atom2.id) >=
+        maxBondsFor(atom2.element);
+
+
+      const existingBond =
+        bonds.find(b =>
+          (
+            b.atom1Id === atom1.id &&
+            b.atom2Id === atom2.id
+          ) ||
+          (
+            b.atom1Id === atom2.id &&
+            b.atom2Id === atom1.id
+          )
+        );
+
+
+      if (atom1Full || atom2Full) {
+
+        alert(
+          `Can't bond — ${
+            atom1Full
+              ? atom1.element
+              : atom2.element
+          } has no available bonding position.`
+        );
+
+      }
+
+      else if (existingBond) {
+
+        if (existingBond.order < 3) {
+
+          existingBond.order++;
+
+        } else {
+
+          alert(
+            "Already a triple bond."
+          );
+        }
+
+      }
+
+      else {
+
+        bonds.push({
+          atom1Id: atom1.id,
+          atom2Id: atom2.id,
+          order: 1
+        });
+      }
     }
   }
 
 
-  // -------------------------
-  // STOP EVERYTHING
-  // -------------------------
-
   draggingAtom = null;
   bondingFromAtom = null;
-
   bondPreviewPos = null;
-
-  isDragging = false;
-  isBonding = false;
 
   redraw();
 });
-
 
 // ============================================================
 // CREATE / INCREASE BOND
