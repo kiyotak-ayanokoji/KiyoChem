@@ -1,9 +1,11 @@
 /* =========================================================
-   KIYOCHEM — HOME ANIMATIONS
+   KIYOCHEM — HOMEPAGE ANIMATIONS
 ========================================================= */
 
 
-/* NAVBAR */
+/* =========================================================
+   NAVBAR SCROLL EFFECT
+========================================================= */
 
 const navbar =
     document.querySelector(".navbar");
@@ -39,31 +41,45 @@ if (navbar) {
 }
 
 
-/* PARTICLES */
+/* =========================================================
+   FLOATING PARTICLES
+========================================================= */
+
+const particleCount = 45;
+
 
 for (
     let i = 0;
-    i < 45;
+    i < particleCount;
     i++
 ) {
 
     const particle =
         document.createElement("div");
 
+
     particle.className =
         "particle";
+
 
     particle.style.left =
         Math.random() * 100 + "%";
 
+
     particle.style.top =
         Math.random() * 100 + "%";
+
 
     particle.style.animationDelay =
         Math.random() * 8 + "s";
 
+
     particle.style.animationDuration =
-        5 + Math.random() * 8 + "s";
+        (
+            5 +
+            Math.random() * 8
+        ) + "s";
+
 
     document.body.appendChild(
         particle
@@ -72,7 +88,9 @@ for (
 }
 
 
-/* SCROLL REVEAL */
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
 
 const revealElements =
     document.querySelectorAll(
@@ -80,53 +98,123 @@ const revealElements =
     );
 
 
-const observer =
-    new IntersectionObserver(
-        entries => {
+if (
+    "IntersectionObserver" in window
+) {
 
-            entries.forEach(
-                entry => {
+    const observer =
+        new IntersectionObserver(
+            entries => {
 
-                    if (
-                        entry.isIntersecting
-                    ) {
+                entries.forEach(
+                    entry => {
 
-                        entry.target.classList.add(
-                            "show"
-                        );
+                        if (
+                            entry.isIntersecting
+                        ) {
 
-                        observer.unobserve(
-                            entry.target
-                        );
+                            entry.target.classList.add(
+                                "show"
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
 
                     }
+                );
 
-                }
+            },
+            {
+                threshold: 0.15
+            }
+        );
+
+
+    revealElements.forEach(
+        element => {
+
+            element.classList.add(
+                "reveal"
             );
 
-        },
-        {
-            threshold: 0.15
+            observer.observe(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MOLECULE CONTAINER PARALLAX
+========================================================= */
+
+const moleculeContainer =
+    document.querySelector(
+        ".molecule-container"
+    );
+
+
+if (moleculeContainer) {
+
+    document.addEventListener(
+        "mousemove",
+        event => {
+
+            const x =
+                (
+                    event.clientX /
+                    window.innerWidth
+                ) - 0.5;
+
+
+            const y =
+                (
+                    event.clientY /
+                    window.innerHeight
+                ) - 0.5;
+
+
+            moleculeContainer.style.transform =
+                `
+                translateX(-60px)
+                translate(
+                    ${x * 12}px,
+                    ${y * 12}px
+                )
+                rotateY(
+                    ${x * 5}deg
+                )
+                rotateX(
+                    ${y * -5}deg
+                )
+                `;
+
         }
     );
 
 
-revealElements.forEach(
-    element => {
+    document.addEventListener(
+        "mouseleave",
+        () => {
 
-        element.classList.add(
-            "reveal"
-        );
+            moleculeContainer.style.transform =
+                "translateX(-60px)";
 
-        observer.observe(
-            element
-        );
+        }
+    );
 
-    }
-);
+}
 
 
-/* MOLECULE */
+/* =========================================================
+   MOLECULE FADE-IN
+========================================================= */
 
 const molecule =
     document.querySelector(
@@ -136,33 +224,13 @@ const molecule =
 
 if (molecule) {
 
-    document.addEventListener(
-        "mousemove",
-        event => {
+    window.addEventListener(
+        "load",
+        () => {
 
-            const x =
-                event.clientX /
-                window.innerWidth -
-                0.5;
-
-            const y =
-                event.clientY /
-                window.innerHeight -
-                0.5;
-
-
-            molecule.style.transform = `
-
-                translate(
-                    ${x * 15}px,
-                    ${y * 15}px
-                )
-
-                rotateY(${x * 8}deg)
-
-                rotateX(${y * -8}deg)
-
-            `;
+            molecule.classList.add(
+                "visible"
+            );
 
         }
     );

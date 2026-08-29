@@ -1,3 +1,8 @@
+/* =========================================================
+   KIYOCHEM — FUTURISTIC CHEMISTRY HOME
+   PURPLE / UNCOMMON THEME
+========================================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -9,8 +14,8 @@ html {
 }
 
 body {
-    background: #05070b;
-    color: #e8edf7;
+    background: #05030b;
+    color: #eee8f7;
     font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
@@ -22,49 +27,34 @@ body {
 
 body::before {
     content: "";
-
     position: fixed;
-
     inset: 0;
-
     background-image:
         linear-gradient(
-            rgba(40,120,255,0.035) 1px,
+            rgba(150, 60, 255, 0.045) 1px,
             transparent 1px
         ),
         linear-gradient(
             90deg,
-            rgba(40,120,255,0.035) 1px,
+            rgba(150, 60, 255, 0.045) 1px,
             transparent 1px
         );
-
     background-size: 50px 50px;
-
     pointer-events: none;
-
     z-index: -5;
 }
 
-
 body::after {
     content: "";
-
     position: fixed;
-
     width: 700px;
     height: 700px;
-
     top: -300px;
     right: -250px;
-
-    background: rgba(0,120,255,0.12);
-
+    background: rgba(150, 40, 255, 0.16);
     filter: blur(140px);
-
     border-radius: 50%;
-
     pointer-events: none;
-
     z-index: -4;
 }
 
@@ -75,97 +65,64 @@ body::after {
 
 .navbar {
     position: fixed;
-
     top: 0;
     left: 0;
-
     width: 100%;
     height: 76px;
-
     padding: 0 7%;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
-    background: rgba(5,7,11,0.72);
-
+    background: rgba(5, 3, 11, 0.72);
     backdrop-filter: blur(18px);
-
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     z-index: 1000;
-
-    transition: 0.3s;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
-
 
 .logo {
     color: white;
-
     font-size: 23px;
-
     font-weight: 800;
-
     letter-spacing: 3px;
-
     text-decoration: none;
+    transform: translate(5px, 3px);
 }
-
 
 .logo span {
-    color: #249cff;
+    color: #a855f7;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.55);
 }
-
 
 nav {
     display: flex;
-
     gap: 34px;
 }
 
-
 nav a {
-    color: #9aa4b5;
-
+    color: #a9a0b8;
     text-decoration: none;
-
     font-size: 14px;
-
     position: relative;
-
-    transition: 0.25s;
+    transition: color 0.25s ease;
 }
-
 
 nav a:hover,
 nav a.active {
     color: white;
 }
 
-
 nav a::after {
     content: "";
-
     position: absolute;
-
     left: 0;
-
     bottom: -8px;
-
     width: 0;
-
     height: 2px;
-
-    background: #249cff;
-
-    box-shadow: 0 0 10px #249cff;
-
-    transition: 0.3s;
+    background: #a855f7;
+    box-shadow: 0 0 10px #a855f7;
+    transition: width 0.3s ease;
 }
-
 
 nav a:hover::after,
 nav a.active::after {
@@ -179,231 +136,350 @@ nav a.active::after {
 
 .hero {
     min-height: 100vh;
-
     padding: 150px 8% 80px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
-    gap: 80px;
-
+    gap: 70px;
     position: relative;
 }
 
-
 .hero-content {
     max-width: 650px;
-
+    position: relative;
+    z-index: 5;
     animation: heroIn 1s ease forwards;
 }
 
-
 @keyframes heroIn {
-
     from {
         opacity: 0;
         transform: translateY(35px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
-
 }
 
+
+/* =========================================================
+   EYEBROW & HERO TEXT
+========================================================= */
 
 .eyebrow {
-    color: #4ba9ff;
-
+    color: #b56cff;
     font-size: 11px;
-
     font-weight: 700;
-
     letter-spacing: 4px;
-
     margin-bottom: 20px;
+    text-shadow: 0 0 12px rgba(181, 108, 255, 0.35);
 }
 
-
 .hero h1 {
-    font-size: clamp(70px,9vw,125px);
-
+    font-size: clamp(70px, 9vw, 125px);
     line-height: 0.9;
-
     letter-spacing: -6px;
-
     font-weight: 800;
 }
 
-
 .hero h1 span {
     color: transparent;
-
-    -webkit-text-stroke: 1px #329eff;
-
-    text-shadow:
-        0 0 30px rgba(30,150,255,0.18);
+    -webkit-text-stroke: 1px #a855f7;
+    text-shadow: 0 0 30px rgba(168, 85, 247, 0.25);
 }
-
 
 .hero-description {
     max-width: 540px;
-
     margin-top: 30px;
-
-    color: #8994a7;
-
+    color: #948ba5;
     font-size: 17px;
-
     line-height: 1.8;
 }
 
 
 /* =========================================================
-   BUTTONS
+   HERO BUTTONS
 ========================================================= */
 
 .hero-buttons {
     display: flex;
-
     gap: 15px;
-
     margin-top: 35px;
-
     flex-wrap: wrap;
 }
-
 
 .primary-button,
 .secondary-button {
     padding: 15px 24px;
-
     border-radius: 8px;
-
     text-decoration: none;
-
     font-size: 14px;
-
     font-weight: 700;
-
-    transition: 0.3s;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
-
 
 .primary-button {
     color: white;
-
-    background: #168fff;
-
-    box-shadow:
-        0 0 25px rgba(22,143,255,0.3);
+    background: linear-gradient(135deg, #8b3dff, #b14cff);
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
 }
-
 
 .primary-button:hover {
     transform: translateY(-4px);
-
-    box-shadow:
-        0 0 35px rgba(22,143,255,0.55);
+    box-shadow: 0 0 35px rgba(168, 85, 247, 0.65);
 }
-
 
 .secondary-button {
-    color: #b7c0cf;
-
-    border: 1px solid #263142;
-
-    background: rgba(255,255,255,0.02);
+    color: #c2b8d0;
+    border: 1px solid #302440;
+    background: rgba(255, 255, 255, 0.02);
 }
-
 
 .secondary-button:hover {
     color: white;
-
-    border-color: #168fff;
-
+    border-color: #a855f7;
     transform: translateY(-4px);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.18);
 }
 
 
 /* =========================================================
-   MOLECULE
+   MOLECULE CONTAINER & CANVAS
 ========================================================= */
 
 .molecule-container {
-    width: 460px;
-
-    height: 460px;
-
+    width: 450px;
+    height: 450px;
+    flex-shrink: 0;
     position: relative;
-
     display: flex;
-
-    justify-content: center;
-
     align-items: center;
+    justify-content: center;
+    transform: translateX(-60px);
+    z-index: 2;
+    transition: transform 0.18s ease-out;
 }
-
 
 .molecule-glow {
     position: absolute;
-
-    width: 300px;
-
-    height: 300px;
-
-    background: #168fff;
-
-    opacity: 0.12;
-
+    width: 310px;
+    height: 310px;
+    background: #9d3cff;
+    opacity: 0.14;
     filter: blur(90px);
-
     border-radius: 50%;
-
     animation: glowPulse 4s infinite alternate;
+    pointer-events: none;
 }
 
-
 @keyframes glowPulse {
-
     from {
         transform: scale(0.85);
         opacity: 0.08;
     }
-
     to {
         transform: scale(1.15);
-        opacity: 0.18;
+        opacity: 0.22;
     }
-
 }
-
 
 .molecule {
     position: relative;
-
     width: 360px;
-
     height: 360px;
-
+    opacity: 1; /* Default set to 1 so canvas shows up immediately */
+    transition: opacity 0.8s ease;
     animation: moleculeFloat 7s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+.molecule.visible {
+    opacity: 1;
+}
+
+@keyframes moleculeFloat {
+    0%, 100% {
+        margin-top: 0;
+    }
+    50% {
+        margin-top: -18px;
+    }
 }
 
 
-@keyframes moleculeFloat {
+/* =========================================================
+   DYNAMIC ATOMS
+========================================================= */
 
-    0%,100% {
-        transform: translateY(0);
+.molecule .atom {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    background: rgba(12, 7, 22, 0.94);
+    border: 2px solid #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.40), inset 0 0 20px rgba(168, 85, 247, 0.10);
+    z-index: 10;
+    user-select: none;
+    pointer-events: none;
+    /* Removed transform: translate(-50%, -50%) so JS layout math aligns perfectly */
+}
+
+/* Carbon */
+.molecule .atom-c {
+    border-color: #a855f7;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.48);
+}
+
+/* Hydrogen */
+.molecule .atom-h {
+    width: 44px;
+    height: 44px;
+    font-size: 13px;
+    border-color: #c9bfd8;
+    color: #aeb8c8;
+    box-shadow: 0 0 14px rgba(201, 191, 216, 0.25);
+}
+
+/* Oxygen */
+.molecule .atom-o {
+    border-color: #ff5066;
+    color: #ff5066;
+    box-shadow: 0 0 20px rgba(255, 80, 102, 0.38);
+}
+
+/* Nitrogen */
+.molecule .atom-n {
+    border-color: #9a6cff;
+    color: #9a6cff;
+    box-shadow: 0 0 20px rgba(154, 108, 255, 0.48);
+}
+
+/* Fluorine */
+.molecule .atom-f {
+    border-color: #45ddb0;
+    box-shadow: 0 0 20px rgba(69, 221, 176, 0.38);
+}
+
+
+/* =========================================================
+   DYNAMIC BONDS
+========================================================= */
+
+.dynamic-bond {
+    position: absolute;
+    height: 3px !important;
+    background-color: #a855f7;
+    transform-origin: 0% 50% !important;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.85);
+    z-index: 1;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   MOLECULE LABEL
+========================================================= */
+
+.molecule-label {
+    position: absolute;
+    left: 50%;
+    bottom: -36px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.molecule-label strong {
+    color: #eee8f7;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.molecule-label span {
+    color: #b56cff;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(181, 108, 255, 0.35);
+}
+
+.molecule-label sub {
+    font-size: 0.8em;
+    vertical-align: sub;
+}
+
+
+/* =========================================================
+   FOUNDER SIGNATURE
+========================================================= */
+
+.founder-signature {
+    position: absolute;
+    top: 5px;
+    right: -15px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #777f91;
+    z-index: 10;
+    opacity: 0;
+    animation: founderReveal 1.2s ease forwards;
+    animation-delay: 0.8s;
+}
+
+.founder-signature::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: #9b4dff;
+    box-shadow: 0 0 8px rgba(155, 77, 255, 0.7);
+}
+
+.founder-signature b {
+    color: #d8c5ff;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+}
+
+.founder-signature em {
+    color: #9b4dff;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow: 0 0 12px rgba(155, 77, 255, 0.45);
+}
+
+@keyframes founderReveal {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) translateX(10px);
     }
-
-    50% {
-        transform: translateY(-18px);
+    to {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
     }
-
 }
 
 
@@ -413,109 +489,97 @@ nav a.active::after {
 
 .tools {
     padding: 130px 8%;
-
-    border-top:
-        1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
-
 
 .section-heading {
     max-width: 650px;
-
     margin-bottom: 60px;
 }
 
-
 .section-heading h2 {
     font-size: 55px;
-
     letter-spacing: -2px;
 }
 
-
 .tool-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
-
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
 }
 
-
 .tool-card {
     min-height: 390px;
-
     padding: 28px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,0.045),
-            rgba(255,255,255,0.01)
-        );
-
-    border:
-        1px solid rgba(255,255,255,0.07);
-
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.045),
+        rgba(255, 255, 255, 0.01)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 14px;
-
     text-decoration: none;
-
     color: inherit;
-
     transition:
-        transform 0.4s,
-        border-color 0.4s,
-        background 0.4s;
-
+        transform 0.4s ease,
+        border-color 0.4s ease,
+        background 0.4s ease;
     position: relative;
-
     overflow: hidden;
 }
 
+.tool-card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    right: -90px;
+    bottom: -90px;
+    background: #a855f7;
+    opacity: 0;
+    filter: blur(70px);
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
 
 .tool-card:hover {
     transform: translateY(-10px);
-
-    border-color:
-        rgba(38,156,255,0.45);
+    border-color: rgba(168, 85, 247, 0.55);
+    box-shadow: 0 15px 45px rgba(120, 40, 200, 0.08);
 }
 
+.tool-card:hover::before {
+    opacity: 0.28;
+}
+
+.tool-link {
+    display: block;
+    cursor: pointer;
+}
 
 .tool-number {
-    color: #526076;
-
+    color: #685a78;
     font-size: 13px;
-
     margin-bottom: 50px;
 }
 
-
 .tool-card h3 {
     font-size: 21px;
-
     margin-bottom: 15px;
 }
 
-
 .tool-card p {
-    color: #788397;
-
+    color: #81778f;
     line-height: 1.7;
-
     font-size: 14px;
 }
 
-
 .tool-card span {
     display: block;
-
     margin-top: 25px;
-
-    color: #369eff;
-
+    color: #b56cff;
     font-size: 13px;
+    text-shadow: 0 0 10px rgba(181, 108, 255, 0.25);
 }
 
 
@@ -525,43 +589,48 @@ nav a.active::after {
 
 .about {
     padding: 140px 8%;
-
     display: grid;
-
-    grid-template-columns:
-        100px 1fr;
-
+    grid-template-columns: 100px 1fr;
     gap: 50px;
-
-    border-top:
-        1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-
 .about-number {
-    color: #364154;
-
+    color: #473c52;
     font-size: 14px;
 }
 
-
 .about h2 {
     font-size: 65px;
-
     line-height: 0.95;
-
     letter-spacing: -3px;
 }
 
-
 .about-text {
-    color: #7e899b;
-
+    color: #857b91;
     max-width: 600px;
-
     line-height: 1.8;
-
     margin-top: 30px;
+}
+
+.founder {
+    margin-top: 32px;
+    padding-left: 16px;
+    border-left: 2px solid #a855f7;
+    color: #a99db5;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.founder strong {
+    display: block;
+    color: #eee8f7;
+    font-size: 17px;
+    margin-top: 4px;
+}
+
+.founder span {
+    color: #b56cff;
 }
 
 
@@ -571,29 +640,22 @@ nav a.active::after {
 
 .cta {
     text-align: center;
-
     padding: 150px 20px;
-
-    border-top:
-        1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
-
 
 .cta h2 {
     font-size: 65px;
-
     letter-spacing: -3px;
 }
 
-
 .cta h2 span {
-    color: #269cff;
+    color: #a855f7;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
 }
 
-
 .cta > p:not(.eyebrow) {
-    color: #7b8697;
-
+    color: #81778d;
     margin: 20px 0 35px;
 }
 
@@ -604,37 +666,26 @@ nav a.active::after {
 
 footer {
     padding: 45px 8%;
-
-    border-top:
-        1px solid rgba(255,255,255,0.06);
-
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     flex-wrap: wrap;
-
     gap: 20px;
 }
 
-
 .footer-logo {
     font-weight: 800;
-
     letter-spacing: 3px;
 }
 
-
 .footer-logo span {
-    color: #269cff;
+    color: #a855f7;
+    text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
 }
 
-
 footer p {
-    color: #596476;
-
+    color: #62586d;
     font-size: 12px;
 }
 
@@ -645,139 +696,105 @@ footer p {
 
 .particle {
     position: fixed;
-
     width: 2px;
-
     height: 2px;
-
-    background: #3da6ff;
-
+    background: #b56cff;
     border-radius: 50%;
-
-    box-shadow:
-        0 0 8px #269cff;
-
+    box-shadow: 0 0 8px #a855f7;
     pointer-events: none;
-
     opacity: 0;
-
     z-index: -1;
-
-    animation:
-        particleFloat linear infinite;
+    animation: particleFloat linear infinite;
 }
 
-
 @keyframes particleFloat {
-
     0% {
         opacity: 0;
-
-        transform:
-            translateY(30px)
-            scale(0.5);
+        transform: translateY(30px) scale(0.5);
     }
-
     20% {
         opacity: 0.7;
     }
-
     80% {
         opacity: 0.5;
     }
-
     100% {
         opacity: 0;
-
-        transform:
-            translateY(-150px)
-            scale(1.2);
+        transform: translateY(-150px) scale(1.2);
     }
-
 }
 
 
 /* =========================================================
-   REVEAL
+   SCROLL REVEAL
 ========================================================= */
 
 .reveal {
     opacity: 0;
-
-    transform:
-        translateY(45px);
-
-    transition:
-        opacity 0.8s ease,
-        transform 0.8s ease;
+    transform: translateY(45px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
-
 
 .reveal.show {
     opacity: 1;
-
-    transform:
-        translateY(0);
+    transform: translateY(0);
 }
 
 
 /* =========================================================
-   MOBILE
+   RESPONSIVE
 ========================================================= */
 
-@media (max-width: 900px) {
-
+@media (max-width: 1100px) {
     .hero {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        padding-top: 130px;
+        gap: 30px;
     }
-
-
+    .molecule-container {
+        transform: translateX(0) scale(0.85);
+    }
     .tool-grid {
-        grid-template-columns:
-            repeat(2,1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
-
-
-    .about {
-        grid-template-columns: 1fr;
-    }
-
 }
 
+@media (max-width: 800px) {
+    .navbar {
+        padding: 0 5%;
+    }
+    nav {
+        gap: 15px;
+    }
+    nav a {
+        font-size: 12px;
+    }
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 130px;
+    }
+    .molecule-container {
+        align-self: center;
+        transform: scale(0.8);
+    }
+}
 
 @media (max-width: 600px) {
-
     nav a:nth-child(3),
     nav a:nth-child(4) {
         display: none;
     }
-
-
     .hero h1 {
         font-size: 65px;
     }
-
-
     .tool-grid {
         grid-template-columns: 1fr;
     }
-
-
     .section-heading h2,
     .about h2,
     .cta h2 {
         font-size: 45px;
     }
-
-
     .molecule-container {
-        transform: scale(0.8);
-
-        margin-left: -35px;
+        transform: scale(0.72);
     }
-
 }
