@@ -1,238 +1,148 @@
 /* =========================================================
-   KIYOCHEM — HOMEPAGE ANIMATIONS
+   KIYOCHEM — HOMEPAGE ANIMATIONS & INTERACTION EFFECTS
 ========================================================= */
 
+document.addEventListener("DOMContentLoaded", () => {
 
-/* =========================================================
-   NAVBAR SCROLL EFFECT
-========================================================= */
+    /* =========================================================
+       1. NAVBAR SCROLL EFFECT
+    ========================================================= */
+    const navbar = document.querySelector(".navbar");
 
-const navbar =
-    document.querySelector(".navbar");
-
-
-if (navbar) {
-
-    window.addEventListener(
-        "scroll",
-        () => {
-
+    if (navbar) {
+        window.addEventListener("scroll", () => {
             if (window.scrollY > 40) {
-
-                navbar.style.background =
-                    "rgba(5, 7, 11, 0.92)";
-
-                navbar.style.boxShadow =
-                    "0 10px 40px rgba(0,0,0,0.35)";
-
+                navbar.style.background = "rgba(5, 7, 11, 0.92)";
+                navbar.style.boxShadow = "0 10px 40px rgba(0,0,0,0.35)";
             } else {
-
-                navbar.style.background =
-                    "rgba(5, 7, 11, 0.72)";
-
-                navbar.style.boxShadow =
-                    "none";
-
+                navbar.style.background = "rgba(5, 7, 11, 0.72)";
+                navbar.style.boxShadow = "none";
             }
-
-        }
-    );
-
-}
+        });
+    }
 
 
-/* =========================================================
-   FLOATING PARTICLES
-========================================================= */
+    /* =========================================================
+       2. CURSOR BACKGROUND GLOW AURA
+    ========================================================= */
+    let glow = document.querySelector(".cursor-glow");
+    if (!glow) {
+        glow = document.createElement("div");
+        glow.className = "cursor-glow";
+        document.body.appendChild(glow);
+    }
 
-const particleCount = 45;
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
 
+    document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
 
-for (
-    let i = 0;
-    i < particleCount;
-    i++
-) {
+    function animateGlow() {
+        glowX += (mouseX - glowX) * 0.12;
+        glowY += (mouseY - glowY) * 0.12;
 
-    const particle =
-        document.createElement("div");
+        glow.style.left = `${glowX}px`;
+        glow.style.top = `${glowY}px`;
 
-
-    particle.className =
-        "particle";
-
-
-    particle.style.left =
-        Math.random() * 100 + "%";
-
-
-    particle.style.top =
-        Math.random() * 100 + "%";
-
-
-    particle.style.animationDelay =
-        Math.random() * 8 + "s";
+        requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
 
 
-    particle.style.animationDuration =
-        (
-            5 +
-            Math.random() * 8
-        ) + "s";
+    /* =========================================================
+       3. FLOATING PARTICLES GENERATOR
+    ========================================================= */
+    let particlesContainer = document.querySelector(".particles-container");
+    if (!particlesContainer) {
+        particlesContainer = document.createElement("div");
+        particlesContainer.className = "particles-container";
+        document.body.appendChild(particlesContainer);
+    }
+
+    const particleCount = 45;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.top = Math.random() * 100 + "%";
+        particle.style.animationDelay = Math.random() * 8 + "s";
+        particle.style.animationDuration = (5 + Math.random() * 8) + "s";
+
+        particlesContainer.appendChild(particle);
+    }
 
 
-    document.body.appendChild(
-        particle
-    );
-
-}
-
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-const revealElements =
-    document.querySelectorAll(
+    /* =========================================================
+       4. SCROLL REVEAL ANIMATIONS
+    ========================================================= */
+    const revealElements = document.querySelectorAll(
         ".tool-card, .about, .cta, .section-heading"
     );
 
-
-if (
-    "IntersectionObserver" in window
-) {
-
-    const observer =
-        new IntersectionObserver(
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
             entries => {
-
-                entries.forEach(
-                    entry => {
-
-                        if (
-                            entry.isIntersecting
-                        ) {
-
-                            entry.target.classList.add(
-                                "show"
-                            );
-
-                            observer.unobserve(
-                                entry.target
-                            );
-
-                        }
-
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("show");
+                        observer.unobserve(entry.target);
                     }
-                );
-
+                });
             },
             {
                 threshold: 0.15
             }
         );
 
-
-    revealElements.forEach(
-        element => {
-
-            element.classList.add(
-                "reveal"
-            );
-
-            observer.observe(
-                element
-            );
-
-        }
-    );
-
-}
+        revealElements.forEach(element => {
+            element.classList.add("reveal");
+            observer.observe(element);
+        });
+    }
 
 
-/* =========================================================
-   MOLECULE CONTAINER PARALLAX
-========================================================= */
+    /* =========================================================
+       5. MOLECULE CONTAINER PARALLAX
+    ========================================================= */
+    const moleculeContainer = document.querySelector(".molecule-container");
 
-const moleculeContainer =
-    document.querySelector(
-        ".molecule-container"
-    );
+    if (moleculeContainer) {
+        document.addEventListener("mousemove", event => {
+            const x = (event.clientX / window.innerWidth) - 0.5;
+            const y = (event.clientY / window.innerHeight) - 0.5;
 
-
-if (moleculeContainer) {
-
-    document.addEventListener(
-        "mousemove",
-        event => {
-
-            const x =
-                (
-                    event.clientX /
-                    window.innerWidth
-                ) - 0.5;
-
-
-            const y =
-                (
-                    event.clientY /
-                    window.innerHeight
-                ) - 0.5;
-
-
-            moleculeContainer.style.transform =
-                `
+            moleculeContainer.style.transform = `
                 translateX(-60px)
-                translate(
-                    ${x * 12}px,
-                    ${y * 12}px
-                )
-                rotateY(
-                    ${x * 5}deg
-                )
-                rotateX(
-                    ${y * -5}deg
-                )
-                `;
+                translate(${x * 12}px, ${y * 12}px)
+                rotateY(${x * 5}deg)
+                rotateX(${y * -5}deg)
+            `;
+        });
 
+        document.addEventListener("mouseleave", () => {
+            moleculeContainer.style.transform = "translateX(-60px)";
+        });
+    }
+
+
+    /* =========================================================
+       6. MOLECULE FADE-IN
+    ========================================================= */
+    const molecule = document.querySelector(".molecule");
+
+    if (molecule) {
+        if (document.readyState === "complete") {
+            molecule.classList.add("visible");
+        } else {
+            window.addEventListener("load", () => {
+                molecule.classList.add("visible");
+            });
         }
-    );
+    }
 
-
-    document.addEventListener(
-        "mouseleave",
-        () => {
-
-            moleculeContainer.style.transform =
-                "translateX(-60px)";
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MOLECULE FADE-IN
-========================================================= */
-
-const molecule =
-    document.querySelector(
-        ".molecule"
-    );
-
-
-if (molecule) {
-
-    window.addEventListener(
-        "load",
-        () => {
-
-            molecule.classList.add(
-                "visible"
-            );
-
-        }
-    );
-
-}
+});

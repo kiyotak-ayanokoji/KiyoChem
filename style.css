@@ -117,7 +117,8 @@ html, body {
 }
 
 .element-toolbar {
-    background: #080c13;
+    background: rgba(8, 12, 19, 0.85);
+    backdrop-filter: blur(8px);
     border-right: 1px solid rgba(255, 255, 255, 0.07);
     padding: 18px 12px;
     overflow-y: auto;
@@ -199,7 +200,7 @@ html, body {
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-    background: #070b11;
+    background: rgba(7, 11, 17, 0.75);
     cursor: crosshair;
 }
 
@@ -211,7 +212,7 @@ html, body {
                       linear-gradient(90deg, rgba(70, 130, 190, 0.018) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
 }
 
 #canvas {
@@ -240,10 +241,12 @@ html, body {
 
 /* ANALYSIS PANEL */
 #analysis {
-    background: #080c13;
+    background: rgba(8, 12, 19, 0.85);
+    backdrop-filter: blur(8px);
     border-left: 1px solid rgba(255, 255, 255, 0.07);
     padding: 21px 19px;
     overflow-y: auto;
+    z-index: 20;
 }
 
 .analysis-header {
@@ -341,9 +344,100 @@ html, body {
 .molecule-label span { font-size: 12px; color: #249cff; letter-spacing: 1.5px; }
 .molecule-label sub { font-size: 0.8em; vertical-align: sub; }
 
+/* =========================================================
+   FLOATING BACKGROUND PARTICLES & TRANSLUCENT GRID
+========================================================= */
+
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 2; /* Sits above body but behind main workspace UI */
+    overflow: hidden;
+}
+
+/* Translucent Background Grid */
+.particles-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+}
+
+/* Glowing Floating Particles (Balanced Visibility) */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(168, 85, 247, 0.65);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.75), 0 0 14px rgba(181, 108, 255, 0.5);
+    animation: floatUp 8s infinite linear;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+    }
+    30% {
+        opacity: 0.8;
+    }
+    80% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-150px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   CURSOR BACKGROUND GLOW AURA
+========================================================= */
+
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(168, 85, 247, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    mix-blend-mode: screen;
+    will-change: left, top;
+}
+
+#render2dBtn {
+    width: auto !important;
+    padding: 0 18px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #249cff;
+    border-color: rgba(36, 156, 255, 0.35);
+}
+
+#render2dBtn:hover {
+    background: rgba(36, 156, 255, 0.15);
+    border-color: #249cff;
+}
+
+
+/* SCROLLBAR & SELECTION */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: #080c13; }
 ::-webkit-scrollbar-thumb { background: #202b3b; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #2c4059; }
 ::selection { background: rgba(36, 156, 255, 0.24); }
+
 
